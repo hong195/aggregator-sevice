@@ -8,7 +8,7 @@ import (
 
 // V1 -.
 type V1 struct {
-	t usecase.UseCases
+	t *usecase.UseCases
 	l logger.Interface
 	v *validator.Validate
 }

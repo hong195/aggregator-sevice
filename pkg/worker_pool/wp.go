@@ -3,7 +3,10 @@ package worker_pool
 import (
 	"context"
 	"fmt"
+	"github.com/hong195/aggregator-sevice/internal/usecase"
+	"github.com/hong195/aggregator-sevice/internal/usecase/command"
 	"github.com/hong195/aggregator-sevice/pkg/generator"
+	"github.com/hong195/aggregator-sevice/pkg/logger"
 	"sync"
 	"time"
 )
@@ -19,9 +22,11 @@ type Pool struct {
 	cancel context.CancelFunc
 
 	errCh chan error
+	u     *usecase.UseCases
+	l     logger.Interface
 }
 
-func NewPool(n int, in <-chan generator.RawPacket) *Pool {
+func NewPool(n int, in <-chan generator.RawPacket, u *usecase.UseCases, l logger.Interface) *Pool {
 	if n < 1 {
 		n = 1
 	}
@@ -29,6 +34,8 @@ func NewPool(n int, in <-chan generator.RawPacket) *Pool {
 		workerCount: n,
 		in:          in,
 		errCh:       make(chan error, 1),
+		u:           u,
+		l:           l,
 	}
 }
 
@@ -74,18 +81,13 @@ func (p *Pool) worker(id int) {
 			return
 		}
 		fmt.Println(pkt)
-	}
-}
 
-func maxVal(xs []int) int {
-	if len(xs) == 0 {
-		return 0
-	}
-	m := xs[0]
-	for _, v := range xs[1:] {
-		if v > m {
-			m = v
+		packetToStore := command.NewStoreDataPacket(pkt.ID.String(), pkt.Timestamp.UnixMilli(), pkt.Payload)
+
+		err := p.u.Commands.StoreDataPacket.Handle(p.ctx, packetToStore)
+		if err != nil {
+			p.l.Error(err, "worker pool - run - StoreDataPacket")
+			return
 		}
 	}
-	return m
 }

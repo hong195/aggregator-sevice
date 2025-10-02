@@ -59,6 +59,11 @@ test: ### run test
 	go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
 .PHONY: test
 
+run: deps swag-v1 proto-v1 ### swag run for API v1
+	go mod download && \
+	CGO_ENABLED=0 go run -tags migrate ./cmd/app
+.PHONY: run
+
 mock: ### run mockgen
 	mockgen -source ./internal/repo/contracts.go -package usecase_test > ./internal/usecase/mocks_repo_test.go
 	#mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go

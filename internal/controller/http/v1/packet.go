@@ -17,8 +17,9 @@ import (
 // @Success     200 {object} entity.DataPacket
 // @Failure     500 {object} response.Error
 // @Router      /packet/{id} [get]
-func (r *V1) findPacket(ctx *fiber.Ctx, id string) error {
-	packet, err := r.t.Queries.FindDataPacketById.Handle(ctx.Context(), id)
+func (r *V1) findPacket(ctx *fiber.Ctx) error {
+	idStr := ctx.Params("id")
+	packet, err := r.t.Queries.FindDataPacketById.Handle(ctx.Context(), idStr)
 
 	if err != nil {
 		r.l.Error(err, "http - v1 - packet")

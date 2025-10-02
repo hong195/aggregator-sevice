@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS data_packets
+CREATE TABLE data_packets
 (
     id UUID PRIMARY KEY,
     ts TIMESTAMPTZ NOT NULL,

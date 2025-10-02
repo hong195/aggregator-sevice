@@ -2,8 +2,6 @@ package generator
 
 import (
 	"context"
-	"github.com/hong195/aggregator-sevice/internal/usecase"
-	"github.com/hong195/aggregator-sevice/internal/usecase/command"
 	"github.com/hong195/aggregator-sevice/pkg/logger"
 	"math/rand"
 	"time"
@@ -23,14 +21,13 @@ type Generator struct {
 	interval time.Duration
 	k        int
 	out      chan<- RawPacket
-	usecases *usecase.UseCases
-	logger   *logger.Interface
+	logger   logger.Interface
 	ctx      context.Context
 	cancel   context.CancelFunc
 	done     chan struct{}
 }
 
-func NewGenerator(u *usecase.UseCases, interval time.Duration, k int, out chan<- RawPacket, l *logger.Interface) *Generator {
+func NewGenerator(interval time.Duration, k int, out chan<- RawPacket, l logger.Interface) *Generator {
 	if interval <= 0 {
 		interval = 100 * time.Millisecond
 	}
@@ -38,7 +35,6 @@ func NewGenerator(u *usecase.UseCases, interval time.Duration, k int, out chan<-
 		k = 1
 	}
 	return &Generator{
-		usecases: u,
 		interval: interval,
 		logger:   l,
 		k:        k,
@@ -84,12 +80,6 @@ func (g *Generator) run() {
 
 			select {
 			case g.out <- p:
-				packetToStore := command.NewStoreDataPacket(p.ID.String(), p.Timestamp.UnixMilli(), p.Payload)
-
-				err := g.usecases.Commands.StoreDataPacket.Handle(g.ctx, packetToStore)
-				if err != nil {
-					return
-				}
 			case <-g.ctx.Done():
 				close(g.out)
 				return
