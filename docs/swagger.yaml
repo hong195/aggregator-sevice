@@ -22,25 +22,7 @@ info:
   title: Data aggregation service Rest API
   version: "1.0"
 paths:
-  /api/v1/packets/:id:
-    get:
-      description: Find packet by ID
-      operationId: history
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/query.DataPacketView'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/response.Error'
-      summary: Find packet
-      tags:
-      - packet
-  /api/v1/packets/packets:
+  /api/v1/packets:
     get:
       consumes:
       - application/json
@@ -48,16 +30,16 @@ paths:
         (Unix ms, UTC).
       operationId: packets-by-period
       parameters:
-      - description: Start time (Unix ms)
+      - description: Start time (time.RFC3339 format)
         in: query
         name: start
         required: true
-        type: integer
-      - description: End time (Unix ms)
+        type: string
+      - description: End time (time.RFC3339 format)
         in: query
         name: end
         required: true
-        type: integer
+        type: string
       produces:
       - application/json
       responses:
@@ -82,4 +64,22 @@ paths:
       summary: Get packets by period
       tags:
       - packets
+  /api/v1/packets/:id:
+    get:
+      description: Find packet by ID
+      operationId: history
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/query.DataPacketView'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Find packet
+      tags:
+      - packet
 swagger: "2.0"

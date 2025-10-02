@@ -9,8 +9,8 @@ import (
 )
 
 type FindDataPacketByPeriodQuery struct {
-	Start int64 `json:"start"`
-	End   int64 `json:"end"`
+	Start string `json:"start"`
+	End   string `json:"end"`
 }
 
 type FindDataPacketByPeriodHandler struct {
@@ -22,8 +22,15 @@ func NewFindDataPacketByPeriodHandler(r repo.DataPacketRepository) *FindDataPack
 }
 
 func (h *FindDataPacketByPeriodHandler) Handle(ctx context.Context, q FindDataPacketByPeriodQuery) ([]DataPacketView, error) {
-	start := time.UnixMilli(q.Start).UTC()
-	end := time.UnixMilli(q.End).UTC()
+
+	start, err := time.Parse(time.RFC3339, q.Start)
+	end, err := time.Parse(time.RFC3339, q.End)
+
+	fmt.Printf("start: %s, end: %s\n", start, end)
+	if err != nil {
+		return nil, repo.ErrInvalidPeriod
+	}
+
 	if end.Before(start) {
 		return nil, repo.ErrInvalidPeriod
 	}
