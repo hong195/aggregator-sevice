@@ -6,6 +6,8 @@ import (
 	"github.com/hong195/aggregator-sevice/config"
 	"github.com/hong195/aggregator-sevice/internal/controller/grpc"
 	"github.com/hong195/aggregator-sevice/internal/controller/http"
+	"github.com/hong195/aggregator-sevice/internal/repo/persistent"
+	"github.com/hong195/aggregator-sevice/internal/usecase"
 	"github.com/hong195/aggregator-sevice/pkg/generator"
 	"github.com/hong195/aggregator-sevice/pkg/grpcserver"
 	"github.com/hong195/aggregator-sevice/pkg/httpserver"
@@ -29,11 +31,8 @@ func Run(cfg *config.Config) {
 	}
 	defer pg.Close()
 
-	// Use-Case
-	//translationUseCase := translation.New(
-	//	persistent.New(pg),
-	//	webapi.New(),
-	//)
+	repo := persistent.NewDataPacketRepository(pg)
+	useCases := usecase.NewUseCases(repo)
 
 	// gRPC Server
 	grpcServer := grpcserver.New(grpcserver.Port(cfg.GRPC.Port))
@@ -41,7 +40,7 @@ func Run(cfg *config.Config) {
 
 	// HTTP Server
 	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
-	http.NewRouter(httpServer.App, cfg, nil, l)
+	http.NewRouter(httpServer.App, cfg, useCases, l)
 
 	//Raw packet generator
 	outRawPackets := make(chan generator.RawPacket)

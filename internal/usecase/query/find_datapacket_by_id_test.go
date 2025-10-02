@@ -32,7 +32,7 @@ func TestFindDataPacketByIDHandler_Success(t *testing.T) {
 		Return(dp, nil)
 
 	h := NewFindDataPacketByIDHandler(mockRepo)
-	view, err := h.Handle(context.Background(), FindDataPacketByIDQuery{ID: id.String()})
+	view, err := h.Handle(context.Background(), id.String())
 
 	assert.NoError(t, err)
 	assert.Equal(t, id.String(), view.ID)
@@ -48,7 +48,7 @@ func TestFindDataPacketByIDHandler_InvalidID(t *testing.T) {
 	mockRepo := mocks.NewMockDataPacketRepository(ctrl)
 
 	h := NewFindDataPacketByIDHandler(mockRepo)
-	view, err := h.Handle(context.Background(), FindDataPacketByIDQuery{ID: "not-a-uuid"})
+	view, err := h.Handle(context.Background(), "not-a-uuid")
 
 	assert.Error(t, err)
 	assert.ErrorIs(t, err, ErrInvalidID)
@@ -70,7 +70,7 @@ func TestFindDataPacketByIDHandler_RepoError(t *testing.T) {
 		Return(entity.DataPacket{}, repoErr)
 
 	h := NewFindDataPacketByIDHandler(mockRepo)
-	view, err := h.Handle(context.Background(), FindDataPacketByIDQuery{ID: id.String()})
+	view, err := h.Handle(context.Background(), id.String())
 
 	assert.Error(t, err)
 	assert.ErrorIs(t, err, repoErr)

@@ -11,11 +11,6 @@ import (
 
 var ErrInvalidID = errors.New("find_datapacket_by_id: invalid UUID")
 
-// FindDataPacketByIDQuery carries the input for the query use case.
-type FindDataPacketByIDQuery struct {
-	ID string
-}
-
 // DataPacketView is a read-model returned by the query handler.
 // Note: Timestamp is UTC; MaxValue type matches domain (int).
 type DataPacketView struct {
@@ -33,13 +28,13 @@ func NewFindDataPacketByIDHandler(r repo.DataPacketRepository) *FindDataPacketBy
 	return &FindDataPacketByIDHandler{repo: r}
 }
 
-func (h *FindDataPacketByIDHandler) Handle(ctx context.Context, q FindDataPacketByIDQuery) (DataPacketView, error) {
-	id, eUid := uuid.Parse(q.ID)
+func (h *FindDataPacketByIDHandler) Handle(ctx context.Context, id string) (DataPacketView, error) {
+	uid, eUid := uuid.Parse(id)
 	if eUid != nil {
 		return DataPacketView{}, ErrInvalidID
 	}
 
-	p, err := h.repo.FindById(ctx, id)
+	p, err := h.repo.FindById(ctx, uid)
 	if err != nil {
 		return DataPacketView{}, fmt.Errorf("repo.FindByID: %w", err)
 	}
