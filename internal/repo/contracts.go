@@ -3,12 +3,15 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"github.com/google/uuid"
 
 	"github.com/hong195/aggregator-sevice/internal/entity"
 )
 
-//go:generate mockgen -source=contracts.go -destination=../usecase/mocks_repo_test.go -package=usecase_test
+//go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=contracts.go -destination=../usecase/mocks_repo_test.go -package=usecase_test
+
+var ErrInvalidPeriod = errors.New("invalid period")
 
 type (
 	DataPacketRepository interface {
