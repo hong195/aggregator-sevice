@@ -14,11 +14,11 @@ var InvalidUUIDError = errors.New("invalid UUID")
 
 type StoreDataPacket struct {
 	ID        string `json:"id"`
-	Timestamp int    `json:"timestamp"` // expected as Unix milliseconds
+	Timestamp int64  `json:"timestamp"` // expected as Unix milliseconds
 	Payload   []int  `json:"payload"`
 }
 
-func NewStoreDataPacket(id string, timestamp int, payload []int) StoreDataPacket {
+func NewStoreDataPacket(id string, timestamp int64, payload []int) StoreDataPacket {
 	return StoreDataPacket{
 		ID:        id,
 		Timestamp: timestamp,
@@ -43,7 +43,7 @@ func (h *StoreDataPacketHandler) Handle(ctx context.Context, cmd StoreDataPacket
 		return fmt.Errorf("%w: %s", InvalidUUIDError, cmd.ID)
 	}
 
-	ts := time.Unix(0, int64(cmd.Timestamp)*int64(time.Millisecond)).UTC()
+	ts := time.UnixMilli(cmd.Timestamp).UTC()
 
 	packet, err := entity.NewDataPacket(uId, ts, cmd.Payload)
 

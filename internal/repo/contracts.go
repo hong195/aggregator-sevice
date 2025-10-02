@@ -9,7 +9,7 @@ import (
 	"github.com/hong195/aggregator-sevice/internal/entity"
 )
 
-//go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=contracts.go -destination=../usecase/mocks_repo_test.go -package=usecase_test
+//go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=contracts.go -destination=./mocks/repo_mock.go -package=mocks
 
 var ErrInvalidPeriod = errors.New("invalid period")
 
