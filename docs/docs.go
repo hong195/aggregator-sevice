@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/packet/{id}": {
+        "/api/v1/packets/:id": {
             "get": {
                 "description": "Find packet by ID",
                 "produces": [
@@ -30,7 +30,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/entity.DataPacket"
+                            "$ref": "#/definitions/query.DataPacketView"
                         }
                     },
                     "500": {
@@ -42,7 +42,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/packets": {
+        "/api/v1/packets/packets": {
             "get": {
                 "description": "Return packets with max values for the time window [start, end] (Unix ms, UTC).",
                 "consumes": [
@@ -105,20 +105,6 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "entity.DataPacket": {
-            "type": "object",
-            "properties": {
-                "id": {
-                    "type": "string"
-                },
-                "maxValue": {
-                    "type": "integer"
-                },
-                "timestamp": {
-                    "type": "string"
-                }
-            }
-        },
         "query.DataPacketView": {
             "type": "object",
             "properties": {
@@ -149,7 +135,7 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/v1",
+	BasePath:         "/",
 	Schemes:          []string{},
 	Title:            "Data aggregation service Rest API",
 	Description:      "Using a translation service as an example",

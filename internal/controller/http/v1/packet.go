@@ -14,9 +14,9 @@ import (
 // @ID          history
 // @Tags  	    packet
 // @Produce     json
-// @Success     200 {object} entity.DataPacket
+// @Success     200 {object} query.DataPacketView
 // @Failure     500 {object} response.Error
-// @Router      /packets/{id} [get]
+// @Router      /api/v1/packets/:id [get]
 func (r *V1) findPacket(ctx *fiber.Ctx) error {
 	idStr := ctx.Params("id")
 	packet, err := r.t.Queries.FindDataPacketById.Handle(ctx.Context(), idStr)
@@ -46,7 +46,7 @@ func (r *V1) findPacket(ctx *fiber.Ctx) error {
 // @Failure     400 {object} response.Error "missing/invalid query params"
 // @Failure     422 {object} response.Error "end < start"
 // @Failure     500 {object} response.Error
-// @Router      /packets [get]
+// @Router      /api/v1/packets/packets [get]
 func (r *V1) listPackets(ctx *fiber.Ctx) error {
 	startStr := ctx.Query("start")
 	endStr := ctx.Query("end")

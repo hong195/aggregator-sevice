@@ -1,14 +1,5 @@
-basePath: /v1
+basePath: /
 definitions:
-  entity.DataPacket:
-    properties:
-      id:
-        type: string
-      maxValue:
-        type: integer
-      timestamp:
-        type: string
-    type: object
   query.DataPacketView:
     properties:
       id:
@@ -31,7 +22,7 @@ info:
   title: Data aggregation service Rest API
   version: "1.0"
 paths:
-  /packet/{id}:
+  /api/v1/packets/:id:
     get:
       description: Find packet by ID
       operationId: history
@@ -41,7 +32,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/entity.DataPacket'
+            $ref: '#/definitions/query.DataPacketView'
         "500":
           description: Internal Server Error
           schema:
@@ -49,7 +40,7 @@ paths:
       summary: Find packet
       tags:
       - packet
-  /packets:
+  /api/v1/packets/packets:
     get:
       consumes:
       - application/json

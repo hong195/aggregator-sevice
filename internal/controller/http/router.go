@@ -21,7 +21,7 @@ import (
 // @description Using a translation service as an example
 // @version     1.0
 // @host        localhost:8080
-// @BasePath    /v1
+// @BasePath    /
 func NewRouter(app *fiber.App, cfg *config.Config, t *usecase.UseCases, l logger.Interface) {
 	// Options
 	app.Use(middleware.Logger(l))
@@ -43,7 +43,7 @@ func NewRouter(app *fiber.App, cfg *config.Config, t *usecase.UseCases, l logger
 	app.Get("/healthz", func(ctx *fiber.Ctx) error { return ctx.SendStatus(http.StatusOK) })
 
 	// Routers
-	apiV1Group := app.Group("/api/v1")
+	apiV1Group := app.Group("api/v1")
 	{
 		v1.NewDataPacketRotes(apiV1Group, t, l)
 	}

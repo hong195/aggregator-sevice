@@ -65,11 +65,10 @@ func (p *Pool) worker(id int) {
 		// быстро дренируем буфер и выходим
 		for {
 			select {
-			case pkt, ok := <-p.in:
+			case _, ok := <-p.in:
 				if !ok {
 					return
 				}
-				fmt.Println(pkt)
 			default:
 				fmt.Println("done")
 				return
@@ -77,9 +76,9 @@ func (p *Pool) worker(id int) {
 		}
 	case pkt, ok := <-p.in:
 		if !ok {
-			fmt.Println("done 2")
 			return
 		}
+
 		fmt.Println(pkt)
 
 		packetToStore := command.NewStoreDataPacket(pkt.ID.String(), pkt.Timestamp.UnixMilli(), pkt.Payload)
