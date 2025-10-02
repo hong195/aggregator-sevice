@@ -15,6 +15,6 @@ func NewDataPacketRotes(apiV1Group fiber.Router, t *usecase.UseCases, l logger.I
 
 	{
 		translationGroup.Post("/", r.listPackets)
-		translationGroup.Get("/{id}", r.findPacket)
+		translationGroup.Get("/:id", r.findPacket)
 	}
 }
