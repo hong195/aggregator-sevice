@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/hong195/aggregator-sevice/internal/repo"
 	"github.com/hong195/aggregator-sevice/internal/usecase/query"
@@ -54,8 +53,6 @@ func (r *V1) listPackets(ctx *fiber.Ctx) error {
 	if startStr == "" || endStr == "" {
 		return errorResponse(ctx, http.StatusBadRequest, "query params 'start' and 'end' are required (unix ms)")
 	}
-
-	fmt.Println("startStr:", startStr, "endStr:", endStr)
 
 	q := query.FindDataPacketByPeriodQuery{
 		Start: startStr,

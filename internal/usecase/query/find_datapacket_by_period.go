@@ -26,7 +26,6 @@ func (h *FindDataPacketByPeriodHandler) Handle(ctx context.Context, q FindDataPa
 	start, err := time.Parse(time.RFC3339, q.Start)
 	end, err := time.Parse(time.RFC3339, q.End)
 
-	fmt.Printf("start: %s, end: %s\n", start, end)
 	if err != nil {
 		return nil, repo.ErrInvalidPeriod
 	}
