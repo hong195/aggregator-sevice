@@ -8,7 +8,7 @@ import (
 )
 
 // NewDataPacketRotes -.
-func NewDataPacketRotes(apiV1Group fiber.Router, t usecase.UseCases, l logger.Interface) {
+func NewDataPacketRotes(apiV1Group fiber.Router, t *usecase.UseCases, l logger.Interface) {
 	r := &V1{t: t, l: l, v: validator.New(validator.WithRequiredStructEnabled())}
 
 	translationGroup := apiV1Group.Group("/translation")

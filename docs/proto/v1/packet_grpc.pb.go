@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AggregationService_GetPacketByID_FullMethodName       = "/grpc.v1.AggregationService/GetPacketByID"
+	AggregationService_FindPacketByID_FullMethodName      = "/grpc.v1.AggregationService/FindPacketByID"
 	AggregationService_ListPacketsByPeriod_FullMethodName = "/grpc.v1.AggregationService/ListPacketsByPeriod"
 )
 
@@ -27,7 +27,7 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AggregationServiceClient interface {
-	GetPacketByID(ctx context.Context, in *GetPacketByIDRequest, opts ...grpc.CallOption) (*GetPacketByIDResponse, error)
+	FindPacketByID(ctx context.Context, in *FindPacketByIDRequest, opts ...grpc.CallOption) (*FindPacketByIDResponse, error)
 	ListPacketsByPeriod(ctx context.Context, in *ListPacketsByPeriodRequest, opts ...grpc.CallOption) (*ListPacketsByPeriodResponse, error)
 }
 
@@ -39,10 +39,10 @@ func NewAggregationServiceClient(cc grpc.ClientConnInterface) AggregationService
 	return &aggregationServiceClient{cc}
 }
 
-func (c *aggregationServiceClient) GetPacketByID(ctx context.Context, in *GetPacketByIDRequest, opts ...grpc.CallOption) (*GetPacketByIDResponse, error) {
+func (c *aggregationServiceClient) FindPacketByID(ctx context.Context, in *FindPacketByIDRequest, opts ...grpc.CallOption) (*FindPacketByIDResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetPacketByIDResponse)
-	err := c.cc.Invoke(ctx, AggregationService_GetPacketByID_FullMethodName, in, out, cOpts...)
+	out := new(FindPacketByIDResponse)
+	err := c.cc.Invoke(ctx, AggregationService_FindPacketByID_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *aggregationServiceClient) ListPacketsByPeriod(ctx context.Context, in *
 // All implementations must embed UnimplementedAggregationServiceServer
 // for forward compatibility.
 type AggregationServiceServer interface {
-	GetPacketByID(context.Context, *GetPacketByIDRequest) (*GetPacketByIDResponse, error)
+	FindPacketByID(context.Context, *FindPacketByIDRequest) (*FindPacketByIDResponse, error)
 	ListPacketsByPeriod(context.Context, *ListPacketsByPeriodRequest) (*ListPacketsByPeriodResponse, error)
 	mustEmbedUnimplementedAggregationServiceServer()
 }
@@ -75,8 +75,8 @@ type AggregationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAggregationServiceServer struct{}
 
-func (UnimplementedAggregationServiceServer) GetPacketByID(context.Context, *GetPacketByIDRequest) (*GetPacketByIDResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetPacketByID not implemented")
+func (UnimplementedAggregationServiceServer) FindPacketByID(context.Context, *FindPacketByIDRequest) (*FindPacketByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindPacketByID not implemented")
 }
 func (UnimplementedAggregationServiceServer) ListPacketsByPeriod(context.Context, *ListPacketsByPeriodRequest) (*ListPacketsByPeriodResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListPacketsByPeriod not implemented")
@@ -102,20 +102,20 @@ func RegisterAggregationServiceServer(s grpc.ServiceRegistrar, srv AggregationSe
 	s.RegisterService(&AggregationService_ServiceDesc, srv)
 }
 
-func _AggregationService_GetPacketByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPacketByIDRequest)
+func _AggregationService_FindPacketByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindPacketByIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AggregationServiceServer).GetPacketByID(ctx, in)
+		return srv.(AggregationServiceServer).FindPacketByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AggregationService_GetPacketByID_FullMethodName,
+		FullMethod: AggregationService_FindPacketByID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AggregationServiceServer).GetPacketByID(ctx, req.(*GetPacketByIDRequest))
+		return srv.(AggregationServiceServer).FindPacketByID(ctx, req.(*FindPacketByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -146,8 +146,8 @@ var AggregationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AggregationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetPacketByID",
-			Handler:    _AggregationService_GetPacketByID_Handler,
+			MethodName: "FindPacketByID",
+			Handler:    _AggregationService_FindPacketByID_Handler,
 		},
 		{
 			MethodName: "ListPacketsByPeriod",

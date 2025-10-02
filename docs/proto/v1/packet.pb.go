@@ -82,27 +82,27 @@ func (x *DataPacket) GetMaxValue() int64 {
 	return 0
 }
 
-type GetPacketByIDRequest struct {
+type FindPacketByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"` // UUID
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetPacketByIDRequest) Reset() {
-	*x = GetPacketByIDRequest{}
+func (x *FindPacketByIDRequest) Reset() {
+	*x = FindPacketByIDRequest{}
 	mi := &file_docs_proto_v1_packet_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetPacketByIDRequest) String() string {
+func (x *FindPacketByIDRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetPacketByIDRequest) ProtoMessage() {}
+func (*FindPacketByIDRequest) ProtoMessage() {}
 
-func (x *GetPacketByIDRequest) ProtoReflect() protoreflect.Message {
+func (x *FindPacketByIDRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_docs_proto_v1_packet_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -114,39 +114,39 @@ func (x *GetPacketByIDRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetPacketByIDRequest.ProtoReflect.Descriptor instead.
-func (*GetPacketByIDRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use FindPacketByIDRequest.ProtoReflect.Descriptor instead.
+func (*FindPacketByIDRequest) Descriptor() ([]byte, []int) {
 	return file_docs_proto_v1_packet_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetPacketByIDRequest) GetId() string {
+func (x *FindPacketByIDRequest) GetId() string {
 	if x != nil {
 		return x.Id
 	}
 	return ""
 }
 
-type GetPacketByIDResponse struct {
+type FindPacketByIDResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Packet        *DataPacket            `protobuf:"bytes,1,opt,name=packet,proto3" json:"packet,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetPacketByIDResponse) Reset() {
-	*x = GetPacketByIDResponse{}
+func (x *FindPacketByIDResponse) Reset() {
+	*x = FindPacketByIDResponse{}
 	mi := &file_docs_proto_v1_packet_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetPacketByIDResponse) String() string {
+func (x *FindPacketByIDResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetPacketByIDResponse) ProtoMessage() {}
+func (*FindPacketByIDResponse) ProtoMessage() {}
 
-func (x *GetPacketByIDResponse) ProtoReflect() protoreflect.Message {
+func (x *FindPacketByIDResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_docs_proto_v1_packet_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -158,12 +158,12 @@ func (x *GetPacketByIDResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetPacketByIDResponse.ProtoReflect.Descriptor instead.
-func (*GetPacketByIDResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use FindPacketByIDResponse.ProtoReflect.Descriptor instead.
+func (*FindPacketByIDResponse) Descriptor() ([]byte, []int) {
 	return file_docs_proto_v1_packet_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *GetPacketByIDResponse) GetPacket() *DataPacket {
+func (x *FindPacketByIDResponse) GetPacket() *DataPacket {
 	if x != nil {
 		return x.Packet
 	}
@@ -275,18 +275,18 @@ const file_docs_proto_v1_packet_proto_rawDesc = "" +
 	"DataPacket\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x128\n" +
 	"\ttimestamp\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\ttimestamp\x12\x1b\n" +
-	"\tmax_value\x18\x03 \x01(\x03R\bmaxValue\"&\n" +
-	"\x14GetPacketByIDRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\"D\n" +
-	"\x15GetPacketByIDResponse\x12+\n" +
+	"\tmax_value\x18\x03 \x01(\x03R\bmaxValue\"'\n" +
+	"\x15FindPacketByIDRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"E\n" +
+	"\x16FindPacketByIDResponse\x12+\n" +
 	"\x06packet\x18\x01 \x01(\v2\x13.grpc.v1.DataPacketR\x06packet\"|\n" +
 	"\x1aListPacketsByPeriodRequest\x120\n" +
 	"\x05start\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x05start\x12,\n" +
 	"\x03end\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\x03end\"H\n" +
 	"\x1bListPacketsByPeriodResponse\x12)\n" +
-	"\x05items\x18\x01 \x03(\v2\x13.grpc.v1.DataPacketR\x05items2\xc6\x01\n" +
-	"\x12AggregationService\x12N\n" +
-	"\rGetPacketByID\x12\x1d.grpc.v1.GetPacketByIDRequest\x1a\x1e.grpc.v1.GetPacketByIDResponse\x12`\n" +
+	"\x05items\x18\x01 \x03(\v2\x13.grpc.v1.DataPacketR\x05items2\xc9\x01\n" +
+	"\x12AggregationService\x12Q\n" +
+	"\x0eFindPacketByID\x12\x1e.grpc.v1.FindPacketByIDRequest\x1a\x1f.grpc.v1.FindPacketByIDResponse\x12`\n" +
 	"\x13ListPacketsByPeriod\x12#.grpc.v1.ListPacketsByPeriodRequest\x1a$.grpc.v1.ListPacketsByPeriodResponseB\x0fZ\rdocs/proto/v1b\x06proto3"
 
 var (
@@ -304,21 +304,21 @@ func file_docs_proto_v1_packet_proto_rawDescGZIP() []byte {
 var file_docs_proto_v1_packet_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_docs_proto_v1_packet_proto_goTypes = []any{
 	(*DataPacket)(nil),                  // 0: grpc.v1.DataPacket
-	(*GetPacketByIDRequest)(nil),        // 1: grpc.v1.GetPacketByIDRequest
-	(*GetPacketByIDResponse)(nil),       // 2: grpc.v1.GetPacketByIDResponse
+	(*FindPacketByIDRequest)(nil),       // 1: grpc.v1.FindPacketByIDRequest
+	(*FindPacketByIDResponse)(nil),      // 2: grpc.v1.FindPacketByIDResponse
 	(*ListPacketsByPeriodRequest)(nil),  // 3: grpc.v1.ListPacketsByPeriodRequest
 	(*ListPacketsByPeriodResponse)(nil), // 4: grpc.v1.ListPacketsByPeriodResponse
 	(*timestamppb.Timestamp)(nil),       // 5: google.protobuf.Timestamp
 }
 var file_docs_proto_v1_packet_proto_depIdxs = []int32{
 	5, // 0: grpc.v1.DataPacket.timestamp:type_name -> google.protobuf.Timestamp
-	0, // 1: grpc.v1.GetPacketByIDResponse.packet:type_name -> grpc.v1.DataPacket
+	0, // 1: grpc.v1.FindPacketByIDResponse.packet:type_name -> grpc.v1.DataPacket
 	5, // 2: grpc.v1.ListPacketsByPeriodRequest.start:type_name -> google.protobuf.Timestamp
 	5, // 3: grpc.v1.ListPacketsByPeriodRequest.end:type_name -> google.protobuf.Timestamp
 	0, // 4: grpc.v1.ListPacketsByPeriodResponse.items:type_name -> grpc.v1.DataPacket
-	1, // 5: grpc.v1.AggregationService.GetPacketByID:input_type -> grpc.v1.GetPacketByIDRequest
+	1, // 5: grpc.v1.AggregationService.FindPacketByID:input_type -> grpc.v1.FindPacketByIDRequest
 	3, // 6: grpc.v1.AggregationService.ListPacketsByPeriod:input_type -> grpc.v1.ListPacketsByPeriodRequest
-	2, // 7: grpc.v1.AggregationService.GetPacketByID:output_type -> grpc.v1.GetPacketByIDResponse
+	2, // 7: grpc.v1.AggregationService.FindPacketByID:output_type -> grpc.v1.FindPacketByIDResponse
 	4, // 8: grpc.v1.AggregationService.ListPacketsByPeriod:output_type -> grpc.v1.ListPacketsByPeriodResponse
 	7, // [7:9] is the sub-list for method output_type
 	5, // [5:7] is the sub-list for method input_type

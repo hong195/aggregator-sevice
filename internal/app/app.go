@@ -44,7 +44,7 @@ func Run(cfg *config.Config) {
 
 	//Raw packet generator
 	outRawPackets := make(chan generator.RawPacket)
-	gen := generator.NewGenerator(time.Millisecond*100, 10, outRawPackets)
+	gen := generator.NewGenerator(useCases, time.Millisecond*100, 10, outRawPackets, l)
 
 	//Worker pool
 	wp := worker_pool.NewPool(10, outRawPackets)

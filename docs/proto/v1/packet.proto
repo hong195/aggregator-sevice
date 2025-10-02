@@ -12,11 +12,11 @@ message DataPacket {
   int64 max_value = 3;
 }
 
-message GetPacketByIDRequest {
-  string id = 1;  // UUID
+message FindPacketByIDRequest {
+  string id = 1;
 }
 
-message GetPacketByIDResponse {
+message FindPacketByIDResponse {
   DataPacket packet = 1;
 }
 
@@ -32,6 +32,6 @@ message ListPacketsByPeriodResponse {
 }
 
 service AggregationService {
-  rpc GetPacketByID (GetPacketByIDRequest) returns (GetPacketByIDResponse);
+  rpc FindPacketByID (FindPacketByIDRequest) returns (FindPacketByIDResponse);
   rpc ListPacketsByPeriod (ListPacketsByPeriodRequest) returns (ListPacketsByPeriodResponse);
 }

@@ -9,9 +9,9 @@ import (
 )
 
 // NewPacketRoutes -.
-func NewPacketRoutes(app *pbgrpc.Server, t usecase.UseCases, l logger.Interface) {
-	r := &V1{t: t, l: l, v: validator.New(validator.WithRequiredStructEnabled())}
+func NewPacketRoutes(app *pbgrpc.Server, u *usecase.UseCases, l logger.Interface) {
+	r := &V1{u: u, l: l, v: validator.New(validator.WithRequiredStructEnabled())}
 	{
-		v1.RegisterPacketServer(app, r)
+		v1.RegisterAggregationServiceServer(app, r)
 	}
 }
