@@ -29,6 +29,11 @@ x-backend-app-environment: &x-backend-app-environment
   # Swagger
   SWAGGER_ENABLED: "true"
 
+  # Worker Pool
+  WORKER_POOL_COUNT: 4
+  #Generator
+  GENERATOR_INTERVAL_MS: 1000
+  GENERATOR_K: 10
 
 services:
   db:
@@ -80,7 +85,6 @@ services:
 networks:
   app_network:
     external: false
-
 
 volumes:
   db_data:

@@ -22,6 +22,11 @@ compose-up-all: ### Run docker compose (with backend and reverse proxy)
 	$(BASE_STACK) up --build -d
 .PHONY: compose-up-all
 
+compose-rebuild: ###
+	$(BASE_STACK) up --build -d --force-recreate
+.PHONY: compose-up-all
+
+
 compose-down: ### Down docker compose
 	$(BASE_STACK) down --remove-orphans
 .PHONY: compose-down

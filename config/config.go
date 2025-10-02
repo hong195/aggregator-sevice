@@ -27,12 +27,12 @@ type (
 	}
 
 	WorkerPool struct {
-		COUNT int `env:"WORKER_POOL_COUNT,required"`
+		Count int `env:"WORKER_POOL_COUNT,required"`
 	}
 
 	Generator struct {
-		INTERVAL_MS int `env:"GENERATOR_INTERVAL_MS,required"`
-		K           int `env:"GENERATOR_K,required"`
+		IntervalMs int `env:"GENERATOR_INTERVAL_MS,required"`
+		K          int `env:"GENERATOR_K,required"`
 	}
 
 	// HTTP -.
