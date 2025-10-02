@@ -36,7 +36,7 @@ func Run(cfg *config.Config) {
 
 	// gRPC Server
 	grpcServer := grpcserver.New(grpcserver.Port(cfg.GRPC.Port))
-	grpc.NewRouter(grpcServer.App, nil, l)
+	grpc.NewRouter(grpcServer.App, useCases, l)
 
 	// HTTP Server
 	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
