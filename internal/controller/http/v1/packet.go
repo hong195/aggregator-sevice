@@ -16,7 +16,7 @@ import (
 // @Produce     json
 // @Success     200 {object} entity.DataPacket
 // @Failure     500 {object} response.Error
-// @Router      /packet/{id} [get]
+// @Router      /packets/{id} [get]
 func (r *V1) findPacket(ctx *fiber.Ctx) error {
 	idStr := ctx.Params("id")
 	packet, err := r.t.Queries.FindDataPacketById.Handle(ctx.Context(), idStr)

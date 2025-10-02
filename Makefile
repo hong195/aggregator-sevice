@@ -44,7 +44,8 @@ format: ### Run code formatter
 .PHONY: format
 
 docker-rm-volume: ### remove docker volume
-	docker volume rm go-clean-template_pg-data
+	$(BASE_STACK) down -v --remove-orphans
+
 .PHONY: docker-rm-volume
 
 linter-golangci: ### check by golangci linter
@@ -74,7 +75,7 @@ deps: ### deps tidy + verify
 .PHONY: deps
 
 migrate-create:  ### create new migration
-	migrate create -ext sql -dir migrations '$(word 2,$(MAKECMDGOALS))'
+	migrate create -ext sql -dir migrations ${NAME}
 .PHONY: migrate-create
 
 migrate-up: ### migration up
@@ -88,3 +89,7 @@ bin-deps: ### install tools
 
 pre-commit: swag-v1 proto-v1 mock format linter-golangci test ### run pre-commit
 .PHONY: pre-commit
+
+
+#psql "host=localhost port=5432 dbname=db user=user password='myAwEsOm3pa55@w0rd' sslmode=disable"
+

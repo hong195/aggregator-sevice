@@ -11,10 +11,10 @@ import (
 func NewDataPacketRotes(apiV1Group fiber.Router, t *usecase.UseCases, l logger.Interface) {
 	r := &V1{t: t, l: l, v: validator.New(validator.WithRequiredStructEnabled())}
 
-	translationGroup := apiV1Group.Group("/translation")
+	translationGroup := apiV1Group.Group("/packets")
 
 	{
-		translationGroup.Get("/packets/{id}", r.findPacket)
-		translationGroup.Post("/packets", r.listPackets)
+		translationGroup.Post("/", r.listPackets)
+		translationGroup.Get("/{id}", r.findPacket)
 	}
 }
