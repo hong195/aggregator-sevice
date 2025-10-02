@@ -29,15 +29,15 @@ func (r *DataPacketRepository) FindById(ctx context.Context, id uuid.UUID) (enti
 	sql := `SELECT id, ts, max_value FROM data_packets WHERE id = $1`
 
 	var p entity.DataPacket
-	if err := r.Pool.QueryRow(ctx, sql, id).
-		Scan(&p.ID, &p.Timestamp, &p.MaxValue); err != nil {
-
+	err := r.Pool.QueryRow(ctx, sql, id).Scan(&p.ID, &p.Timestamp, &p.MaxValue)
+	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return entity.DataPacket{}, fmt.Errorf("packet %s not found: %w", id, err)
+			return entity.DataPacket{}, fmt.Errorf("packet %s not found: %w", id, repo.ErrNotFound)
 		}
-		return entity.DataPacket{}, fmt.Errorf("FindByID query: %w", err)
+		return entity.DataPacket{}, fmt.Errorf("findById query failed: %w", err)
 	}
-	return entity.DataPacket{}, nil
+
+	return p, nil
 }
 
 func (r *DataPacketRepository) FindByPeriod(ctx context.Context, criteria repo.DataPacketCriteria) ([]entity.DataPacket, error) {

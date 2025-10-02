@@ -12,6 +12,7 @@ import (
 //go:generate go run github.com/golang/mock/mockgen@v1.6.0 -source=contracts.go -destination=./mocks/repo_mock.go -package=mocks
 
 var ErrInvalidPeriod = errors.New("invalid period")
+var ErrNotFound = errors.New("packet not found")
 
 type (
 	DataPacketRepository interface {

@@ -24,6 +24,10 @@ func (r *V1) findPacket(ctx *fiber.Ctx) error {
 	if err != nil {
 		r.l.Error(err, "http - v1 - packet")
 
+		if errors.Is(err, repo.ErrInvalidPeriod) {
+			return errorResponse(ctx, http.StatusNotFound, "Packet not found")
+		}
+
 		return errorResponse(ctx, http.StatusInternalServerError, "database problems")
 	}
 
