@@ -9,19 +9,30 @@ import (
 type (
 	// Config -.
 	Config struct {
-		App     App
-		HTTP    HTTP
-		Log     Log
-		PG      PG
-		GRPC    GRPC
-		Metrics Metrics
-		Swagger Swagger
+		App        App
+		HTTP       HTTP
+		Log        Log
+		PG         PG
+		GRPC       GRPC
+		Metrics    Metrics
+		Swagger    Swagger
+		WorkerPool WorkerPool
+		Generator  Generator
 	}
 
 	// App -.
 	App struct {
 		Name    string `env:"APP_NAME,required"`
 		Version string `env:"APP_VERSION,required"`
+	}
+
+	WorkerPool struct {
+		COUNT int `env:"WORKER_POOL_COUNT,required"`
+	}
+
+	Generator struct {
+		INTERVAL_MS int `env:"GENERATOR_INTERVAL_MS,required"`
+		K           int `env:"GENERATOR_K,required"`
 	}
 
 	// HTTP -.

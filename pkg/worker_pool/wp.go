@@ -8,10 +8,7 @@ import (
 	"github.com/hong195/aggregator-sevice/pkg/generator"
 	"github.com/hong195/aggregator-sevice/pkg/logger"
 	"sync"
-	"time"
 )
-
-const defaultStopTimeout = 3 * time.Second
 
 type Pool struct {
 	workerCount int
@@ -44,7 +41,7 @@ func (p *Pool) Start() {
 	p.wg.Add(p.workerCount)
 
 	for i := 1; i <= p.workerCount; i++ {
-		go p.worker(i)
+		go p.worker()
 	}
 }
 
@@ -58,35 +55,37 @@ func (p *Pool) Shutdown() error {
 	return nil
 }
 
-func (p *Pool) worker(id int) {
+func (p *Pool) worker() {
 	defer p.wg.Done()
-	select {
-	case <-p.ctx.Done():
-		// быстро дренируем буфер и выходим
-		for {
-			select {
-			case _, ok := <-p.in:
-				if !ok {
+
+	for {
+		select {
+		case <-p.ctx.Done():
+			for {
+				select {
+				case _, ok := <-p.in:
+					if !ok {
+						return
+					}
+				default:
+					fmt.Println("done")
 					return
 				}
-			default:
-				fmt.Println("done")
+			}
+		case pkt, ok := <-p.in:
+			if !ok {
 				return
 			}
-		}
-	case pkt, ok := <-p.in:
-		if !ok {
-			return
-		}
 
-		fmt.Println(pkt)
+			p.l.Info("Got a packet: %s", pkt)
 
-		packetToStore := command.NewStoreDataPacket(pkt.ID.String(), pkt.Timestamp.UnixMilli(), pkt.Payload)
+			packetToStore := command.NewStoreDataPacket(pkt.ID.String(), pkt.Timestamp.UnixMilli(), pkt.Payload)
 
-		err := p.u.Commands.StoreDataPacket.Handle(p.ctx, packetToStore)
-		if err != nil {
-			p.l.Error(err, "worker pool - run - StoreDataPacket")
-			return
+			err := p.u.Commands.StoreDataPacket.Handle(p.ctx, packetToStore)
+			if err != nil {
+				p.l.Error(err, "worker pool - run - StoreDataPacket")
+				continue
+			}
 		}
 	}
 }

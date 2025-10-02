@@ -44,10 +44,10 @@ func Run(cfg *config.Config) {
 
 	//Raw packet generator
 	outRawPackets := make(chan generator.RawPacket)
-	gen := generator.NewGenerator(time.Millisecond*100, 10, outRawPackets, l)
+	gen := generator.NewGenerator(time.Duration(cfg.Generator.INTERVAL_MS)*time.Millisecond, cfg.Generator.K, outRawPackets, l)
 
 	//Worker pool
-	wp := worker_pool.NewPool(10, outRawPackets, useCases, l)
+	wp := worker_pool.NewPool(cfg.WorkerPool.COUNT, outRawPackets, useCases, l)
 
 	// Start servers
 	grpcServer.Start()
