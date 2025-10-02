@@ -82,7 +82,7 @@ func (r *DataPacketRepository) FindByPeriod(ctx context.Context, criteria repo.D
 func (r *DataPacketRepository) Store(ctx context.Context, dp entity.DataPacket) error {
 	sql, args, err := r.Builder.
 		Insert("data_packets").
-		Columns("id, timestamp, max_value").
+		Columns("id, ts, max_value").
 		Values(dp.ID, dp.Timestamp.UTC(), dp.MaxValue).
 		ToSql()
 

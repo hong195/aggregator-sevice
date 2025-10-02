@@ -61,8 +61,12 @@ test: ### run test
 
 mock: ### run mockgen
 	mockgen -source ./internal/repo/contracts.go -package usecase_test > ./internal/usecase/mocks_repo_test.go
-	mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go
+	#mockgen -source ./internal/usecase/contracts.go -package usecase_test > ./internal/usecase/mocks_usecase_test.go
 .PHONY: mock
+
+deps: ### deps tidy + verify
+	go mod tidy && go mod verify
+.PHONY: deps
 
 migrate-create:  ### create new migration
 	migrate create -ext sql -dir migrations '$(word 2,$(MAKECMDGOALS))'
