@@ -15,15 +15,15 @@ type DataPacket struct {
 	MaxValue  int
 }
 
-func NewDataPacket(id uuid.UUID, timestamp time.Time, payload []int) (*DataPacket, error) {
+func NewDataPacket(id uuid.UUID, timestamp time.Time, payload []int) (DataPacket, error) {
 
 	maxVal, err := getMax(payload)
 
 	if err != nil {
-		return nil, fmt.Errorf("NewDataPacket: %w", err)
+		return DataPacket{}, fmt.Errorf("%w", err)
 	}
 
-	packet := &DataPacket{
+	packet := DataPacket{
 		ID:        id,
 		Timestamp: timestamp,
 		MaxValue:  maxVal,

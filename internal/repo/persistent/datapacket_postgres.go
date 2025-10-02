@@ -25,7 +25,7 @@ func NewDataPacketRepository(pg *postgres.Postgres) *DataPacketRepository {
 }
 
 // FindById -.
-func (r *DataPacketRepository) FindById(ctx context.Context, id uuid.UUID) (*entity.DataPacket, error) {
+func (r *DataPacketRepository) FindById(ctx context.Context, id uuid.UUID) (entity.DataPacket, error) {
 	sql := `SELECT id, ts, max_value FROM data_packets WHERE id = $1`
 
 	var p entity.DataPacket
@@ -33,11 +33,11 @@ func (r *DataPacketRepository) FindById(ctx context.Context, id uuid.UUID) (*ent
 		Scan(&p.ID, &p.Timestamp, &p.MaxValue); err != nil {
 
 		if errors.Is(err, pgx.ErrNoRows) {
-			return nil, fmt.Errorf("packet %s not found: %w", id, err)
+			return entity.DataPacket{}, fmt.Errorf("packet %s not found: %w", id, err)
 		}
-		return nil, fmt.Errorf("FindByID query: %w", err)
+		return entity.DataPacket{}, fmt.Errorf("FindByID query: %w", err)
 	}
-	return &p, nil
+	return entity.DataPacket{}, nil
 }
 
 func (r *DataPacketRepository) FindByPeriod(ctx context.Context, criteria repo.DataPacketCriteria) ([]entity.DataPacket, error) {

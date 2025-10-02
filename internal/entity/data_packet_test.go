@@ -50,18 +50,7 @@ func TestGetMax(t *testing.T) {
 	for _, tc := range testCases {
 		packet, err := NewDataPacket(uuid.New(), time.Now(), tc.payload)
 
-		// Всегда сравниваем с ожидаемой ошибкой
 		assert.ErrorIs(t, err, tc.err)
-
-		if tc.err != nil {
-			// При ожидаемой ошибке пакет обычно nil — дальше не идём
-			assert.Nil(t, packet)
-			return
-		}
-
-		// Если ошибки не ждём — убедимся, что её нет и пакет не nil
-		if assert.NoError(t, err) && assert.NotNil(t, packet) {
-			assert.Equal(t, tc.expected, packet.MaxValue)
-		}
+		assert.Equal(t, tc.expected, packet.MaxValue)
 	}
 }

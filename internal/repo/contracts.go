@@ -13,7 +13,7 @@ import (
 type (
 	DataPacketRepository interface {
 		Store(context.Context, entity.DataPacket) error
-		FindById(ctx context.Context, id uuid.UUID) (*entity.DataPacket, error)
+		FindById(ctx context.Context, id uuid.UUID) (entity.DataPacket, error)
 		FindByPeriod(context.Context, DataPacketCriteria) ([]entity.DataPacket, error)
 	}
 )
