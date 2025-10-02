@@ -21,30 +21,31 @@ func TestFindDataPacketByPeriodHandler_Success(t *testing.T) {
 
 	mockRepo := mocks.NewMockDataPacketRepository(ctrl)
 
-	// Готовим период в ms и такие же time.Time из них (точность совпадёт с хэндлером)
-	startMs := time.Now().Add(-30 * time.Minute).UTC().UnixMilli()
-	endMs := startMs + int64(10*time.Minute/time.Millisecond)
-	expectedStart := time.UnixMilli(startMs).UTC()
-	expectedEnd := time.UnixMilli(endMs).UTC()
+	// Период
+	start := time.Now().Add(-30 * time.Minute).UTC()
+	end := start.Add(10 * time.Minute).UTC()
 
-	// Два доменных пакета внутри периода
-	p1 := entity.DataPacket{ID: uuid.New(), Timestamp: expectedStart.Add(2 * time.Minute), MaxValue: 5}
-	p2 := entity.DataPacket{ID: uuid.New(), Timestamp: expectedStart.Add(5 * time.Minute), MaxValue: 9}
+	startStr := start.Format(time.RFC3339)
+	endStr := end.Format(time.RFC3339)
 
-	// Проверяем, что критерии дошли корректно и возвращаем данные
+	// Два пакета в этом периоде
+	p1 := entity.DataPacket{ID: uuid.New(), Timestamp: start.Add(2 * time.Minute), MaxValue: 5}
+	p2 := entity.DataPacket{ID: uuid.New(), Timestamp: start.Add(5 * time.Minute), MaxValue: 9}
+
+	// Ожидание вызова FindByPeriod
 	mockRepo.
 		EXPECT().
 		FindByPeriod(gomock.Any(), gomock.AssignableToTypeOf(repo.DataPacketCriteria{})).
 		DoAndReturn(func(_ context.Context, c repo.DataPacketCriteria) ([]entity.DataPacket, error) {
-			assert.True(t, c.Start.Equal(expectedStart), "start mismatch")
-			assert.True(t, c.End.Equal(expectedEnd), "end mismatch")
+			assert.Equal(t, start.Format(time.RFC3339), c.Start.Format(time.RFC3339))
+			assert.Equal(t, end.Format(time.RFC3339), c.End.Format(time.RFC3339))
 			return []entity.DataPacket{p1, p2}, nil
 		})
 
 	h := NewFindDataPacketByPeriodHandler(mockRepo)
 	out, err := h.Handle(context.Background(), FindDataPacketByPeriodQuery{
-		Start: startMs,
-		End:   endMs,
+		Start: startStr,
+		End:   endStr,
 	})
 
 	assert.NoError(t, err)
@@ -55,6 +56,37 @@ func TestFindDataPacketByPeriodHandler_Success(t *testing.T) {
 	assert.Equal(t, p2.ID.String(), out[1].ID)
 	assert.True(t, out[1].Timestamp.Equal(p2.Timestamp))
 	assert.Equal(t, p2.MaxValue, out[1].MaxValue)
+}
+
+func TestFindDataPacketByPeriodHandler_RepoError(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	mockRepo := mocks.NewMockDataPacketRepository(ctrl)
+
+	start := time.Now().Add(-15 * time.Minute).UTC()
+	end := time.Now().UTC()
+
+	repoErr := errors.New("db down")
+
+	mockRepo.
+		EXPECT().
+		FindByPeriod(gomock.Any(), gomock.AssignableToTypeOf(repo.DataPacketCriteria{})).
+		DoAndReturn(func(_ context.Context, c repo.DataPacketCriteria) ([]entity.DataPacket, error) {
+			assert.Equal(t, start.Format(time.RFC3339), c.Start.Format(time.RFC3339))
+			assert.Equal(t, end.Format(time.RFC3339), c.End.Format(time.RFC3339))
+			return nil, repoErr
+		})
+
+	h := NewFindDataPacketByPeriodHandler(mockRepo)
+	out, err := h.Handle(context.Background(), FindDataPacketByPeriodQuery{
+		Start: start.Format(time.RFC3339),
+		End:   end.Format(time.RFC3339),
+	})
+
+	assert.Error(t, err)
+	assert.ErrorIs(t, err, repoErr)
+	assert.Nil(t, out)
 }
 
 func TestFindDataPacketByPeriodHandler_InvalidPeriod(t *testing.T) {
@@ -68,49 +100,17 @@ func TestFindDataPacketByPeriodHandler_InvalidPeriod(t *testing.T) {
 		FindByPeriod(gomock.Any(), gomock.Any()).
 		Times(0)
 
-	startMs := time.Now().UTC().UnixMilli()
-	endMs := startMs - 1000
+	// здесь end раньше start
+	start := time.Now().UTC()
+	end := start.Add(-5 * time.Minute).UTC()
 
 	h := NewFindDataPacketByPeriodHandler(mockRepo)
 	out, err := h.Handle(context.Background(), FindDataPacketByPeriodQuery{
-		Start: startMs,
-		End:   endMs,
+		Start: start.Format(time.RFC3339),
+		End:   end.Format(time.RFC3339),
 	})
 
 	assert.Error(t, err)
 	assert.ErrorIs(t, err, repo.ErrInvalidPeriod)
-	assert.Nil(t, out)
-}
-
-func TestFindDataPacketByPeriodHandler_RepoError(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-
-	mockRepo := mocks.NewMockDataPacketRepository(ctrl)
-
-	startMs := time.Now().Add(-15 * time.Minute).UTC().UnixMilli()
-	endMs := time.Now().UTC().UnixMilli()
-	expectedStart := time.UnixMilli(startMs).UTC()
-	expectedEnd := time.UnixMilli(endMs).UTC()
-
-	repoErr := errors.New("db down")
-
-	mockRepo.
-		EXPECT().
-		FindByPeriod(gomock.Any(), gomock.AssignableToTypeOf(repo.DataPacketCriteria{})).
-		DoAndReturn(func(_ context.Context, c repo.DataPacketCriteria) ([]entity.DataPacket, error) {
-			assert.True(t, c.Start.Equal(expectedStart))
-			assert.True(t, c.End.Equal(expectedEnd))
-			return nil, repoErr
-		})
-
-	h := NewFindDataPacketByPeriodHandler(mockRepo)
-	out, err := h.Handle(context.Background(), FindDataPacketByPeriodQuery{
-		Start: startMs,
-		End:   endMs,
-	})
-
-	assert.Error(t, err)
-	assert.ErrorIs(t, err, repoErr)
 	assert.Nil(t, out)
 }

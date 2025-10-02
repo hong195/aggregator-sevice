@@ -52,10 +52,6 @@ linter-golangci: ### check by golangci linter
 	golangci-lint run
 .PHONY: linter-golangci
 
-linter-dotenv: ### check by dotenv linter
-	dotenv-linter
-.PHONY: linter-dotenv
-
 test: ### run test
 	go test -v -race -covermode atomic -coverprofile=coverage.txt ./internal/...
 .PHONY: test
