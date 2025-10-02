@@ -11,7 +11,7 @@ RUN go mod download
 FROM golang:1.25-alpine3.21 as builder
 
 COPY --from=modules /go/pkg /go/pkg
-COPY go-clean-template /app
+COPY . /app
 
 WORKDIR /app
 
