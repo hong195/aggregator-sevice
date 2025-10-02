@@ -3,6 +3,7 @@ package generator
 import (
 	"context"
 	"fmt"
+	"github.com/hong195/aggregator-sevice/internal/usecase"
 	"math/rand"
 	"time"
 
@@ -21,13 +22,13 @@ type Generator struct {
 	interval time.Duration
 	k        int
 	out      chan<- RawPacket
-
-	ctx    context.Context
-	cancel context.CancelFunc
-	done   chan struct{}
+	usecases usecase.UseCases
+	ctx      context.Context
+	cancel   context.CancelFunc
+	done     chan struct{}
 }
 
-func NewGenerator(interval time.Duration, k int, out chan<- RawPacket) *Generator {
+func NewGenerator(u usecase.UseCases, interval time.Duration, k int, out chan<- RawPacket) *Generator {
 	if interval <= 0 {
 		interval = 100 * time.Millisecond
 	}
@@ -35,6 +36,7 @@ func NewGenerator(interval time.Duration, k int, out chan<- RawPacket) *Generato
 		k = 1
 	}
 	return &Generator{
+		usecases: u,
 		interval: interval,
 		k:        k,
 		out:      out,

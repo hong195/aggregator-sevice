@@ -1,0 +1,94 @@
+basePath: /v1
+definitions:
+  entity.DataPacket:
+    properties:
+      id:
+        type: string
+      maxValue:
+        type: integer
+      timestamp:
+        type: string
+    type: object
+  query.DataPacketView:
+    properties:
+      id:
+        type: string
+      max_value:
+        type: integer
+      timestamp:
+        type: string
+    type: object
+  response.Error:
+    properties:
+      error:
+        example: message
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: Using a translation service as an example
+  title: Data aggregation service Rest API
+  version: "1.0"
+paths:
+  /packet/{id}:
+    get:
+      description: Find packet by ID
+      operationId: history
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.DataPacket'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Find packet
+      tags:
+      - packet
+  /packets:
+    get:
+      consumes:
+      - application/json
+      description: Return packets with max values for the time window [start, end]
+        (Unix ms, UTC).
+      operationId: packets-by-period
+      parameters:
+      - description: Start time (Unix ms)
+        in: query
+        name: start
+        required: true
+        type: integer
+      - description: End time (Unix ms)
+        in: query
+        name: end
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/query.DataPacketView'
+            type: array
+        "400":
+          description: missing/invalid query params
+          schema:
+            $ref: '#/definitions/response.Error'
+        "422":
+          description: end < start
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Get packets by period
+      tags:
+      - packets
+swagger: "2.0"

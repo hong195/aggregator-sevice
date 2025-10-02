@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package grpc.v1;
+
+option go_package = "docs/proto/v1";
+
+import "google/protobuf/timestamp.proto";
+
+message DataPacket {
+  string id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  int64 max_value = 3;
+}
+
+message GetPacketByIDRequest {
+  string id = 1;  // UUID
+}
+
+message GetPacketByIDResponse {
+  DataPacket packet = 1;
+}
+
+message ListPacketsByPeriodRequest {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end   = 2;
+
+  /// TODO добавить пагинацию
+}
+
+message ListPacketsByPeriodResponse {
+  repeated DataPacket items = 1;
+}
+
+service AggregationService {
+  rpc GetPacketByID (GetPacketByIDRequest) returns (GetPacketByIDResponse);
+  rpc ListPacketsByPeriod (ListPacketsByPeriodRequest) returns (ListPacketsByPeriodResponse);
+}

@@ -1,0 +1,140 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Using a translation service as an example",
+        "title": "Data aggregation service Rest API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/v1",
+    "paths": {
+        "/packet/{id}": {
+            "get": {
+                "description": "Find packet by ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "packet"
+                ],
+                "summary": "Find packet",
+                "operationId": "history",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/entity.DataPacket"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/packets": {
+            "get": {
+                "description": "Return packets with max values for the time window [start, end] (Unix ms, UTC).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "packets"
+                ],
+                "summary": "Get packets by period",
+                "operationId": "packets-by-period",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Start time (Unix ms)",
+                        "name": "start",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "End time (Unix ms)",
+                        "name": "end",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/query.DataPacketView"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "missing/invalid query params",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "422": {
+                        "description": "end \u003c start",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "entity.DataPacket": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "maxValue": {
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "query.DataPacketView": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "max_value": {
+                    "type": "integer"
+                },
+                "timestamp": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Error": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string",
+                    "example": "message"
+                }
+            }
+        }
+    }
+}

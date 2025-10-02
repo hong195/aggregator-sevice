@@ -36,7 +36,6 @@ func TestFindDataPacketByIDHandler_Success(t *testing.T) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, id.String(), view.ID)
-	// time.Time лучше сравнивать через Equal (игнорирует монотонную часть)
 	assert.True(t, view.Timestamp.Equal(ts), "timestamp mismatch: got=%s want=%s", view.Timestamp, ts)
 	assert.Equal(t, 123, view.MaxValue)
 }
