@@ -20,11 +20,9 @@ import (
 	"time"
 )
 
-// Run creates objects via constructors.
 func Run(cfg *config.Config) {
 	l := logger.New(cfg.Log.Level)
 
-	// Repository
 	pg, err := postgres.New(cfg.PG.URL, postgres.MaxPoolSize(cfg.PG.PoolMax))
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - postgres.New: %w", err))
@@ -34,28 +32,22 @@ func Run(cfg *config.Config) {
 	repo := persistent.NewDataPacketRepository(pg)
 	useCases := usecase.NewUseCases(repo)
 
-	// gRPC Server
 	grpcServer := grpcserver.New(grpcserver.Port(cfg.GRPC.Port))
 	grpc.NewRouter(grpcServer.App, useCases, l)
 
-	// HTTP Server
 	httpServer := httpserver.New(httpserver.Port(cfg.HTTP.Port), httpserver.Prefork(cfg.HTTP.UsePreforkMode))
 	http.NewRouter(httpServer.App, cfg, useCases, l)
 
-	//Raw packet generator
 	outRawPackets := make(chan generator.RawPacket)
 	gen := generator.NewGenerator(time.Duration(cfg.Generator.IntervalMs)*time.Millisecond, cfg.Generator.K, outRawPackets, l)
 
-	//Worker pool
 	wp := worker_pool.NewPool(cfg.WorkerPool.Count, outRawPackets, useCases, l)
 
-	// Start servers
 	grpcServer.Start()
 	httpServer.Start()
 	gen.Start()
 	wp.Start()
 
-	// Waiting signal
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt, syscall.SIGTERM)
 
@@ -78,7 +70,6 @@ func Run(cfg *config.Config) {
 		l.Error(fmt.Errorf("app - Run - workder_pool.Shutdown: %w", err))
 	}
 
-	// Shutdown
 	err = httpServer.Shutdown()
 	if err != nil {
 		l.Error(fmt.Errorf("app - Run - httpServer.Shutdown: %w", err))

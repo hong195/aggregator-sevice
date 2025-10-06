@@ -14,17 +14,14 @@ import (
 
 const _defaultEntityCap = 64
 
-// DataPacketRepository -.
 type DataPacketRepository struct {
 	*postgres.Postgres
 }
 
-// NewDataPacketRepository -.
 func NewDataPacketRepository(pg *postgres.Postgres) *DataPacketRepository {
 	return &DataPacketRepository{pg}
 }
 
-// FindById -.
 func (r *DataPacketRepository) FindById(ctx context.Context, id uuid.UUID) (entity.DataPacket, error) {
 	sql := `SELECT id, ts, max_value FROM data_packets WHERE id = $1`
 

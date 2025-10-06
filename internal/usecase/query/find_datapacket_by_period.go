@@ -34,10 +34,7 @@ func (h *FindDataPacketByPeriodHandler) Handle(ctx context.Context, q FindDataPa
 		return nil, repo.ErrInvalidPeriod
 	}
 
-	criteria := repo.DataPacketCriteria{
-		Start: start,
-		End:   end,
-	}
+	criteria := repo.MakeDataPacketCriteria(start, end)
 
 	items, err := h.repo.FindByPeriod(ctx, criteria)
 

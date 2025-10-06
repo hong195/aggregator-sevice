@@ -12,7 +12,6 @@ import (
 var ErrInvalidID = errors.New("find_datapacket_by_id: invalid UUID")
 
 // DataPacketView is a read-model returned by the query handler.
-// Note: Timestamp is UTC; MaxValue type matches domain (int).
 type DataPacketView struct {
 	ID        string    `json:"id"`
 	Timestamp time.Time `json:"timestamp"`
